@@ -24,6 +24,7 @@
 
     <title>Aurelio | Portofolio</title>
   </head>
+
   <body id="home">
     <!-- Navbar Atas -->
     <nav
@@ -199,7 +200,22 @@
         </div>
         <div class="row justify-content-center">
           <div class="col-md-6">
-            <form>
+            <!-- Alert (Warning) -->
+            <div
+              class="alert alert-success alert-dismissible fade show d-none btn-alert"
+              role="alert"
+            >
+              <strong>Success!</strong> Your message has been sent and has been
+              recorded.
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <form name="form-portofolio">
               <div class="mb-3">
                 <label for="name" class="form-label">Nama Lengkap</label>
                 <input
@@ -207,6 +223,7 @@
                   class="form-control"
                   id="name"
                   aria-describedby="name"
+                  name="nama"
                 />
               </div>
               <div class="mb-3">
@@ -216,14 +233,37 @@
                   class="form-control"
                   id="email"
                   aria-describedby="email"
+                  name="email"
                 />
               </div>
               <div class="mb-3">
                 <label for="pesan" class="form-label">Pesan</label>
-                <textarea class="form-control" id="pesan" rows="3"></textarea>
+                <textarea
+                  class="form-control"
+                  id="pesan"
+                  rows="3"
+                  name="pesan"
+                ></textarea>
               </div>
 
-              <button type="submit" class="btn btn-primary mb-3">Send</button>
+              <!-- Button Kirim -->
+              <button type="submit" class="btn btn-primary mb-3 btn-kirim">
+                Send
+              </button>
+
+              <!-- Button Loading -->
+              <button
+                class="btn btn-primary btn-loading d-none"
+                type="button"
+                disabled
+              >
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -247,5 +287,36 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbzcuZTKT_t9vqllbz7OxxhMH4KRPVOw4pri_f-mU_Q5-fqmgFQKQ_sO3L03uLNWr07NTA/exec";
+      const form = document.forms["form-portofolio"];
+      const btnKirim = document.querySelector(".btn-kirim");
+      const btnLoad = document.querySelector(".btn-loading");
+      const Alert = document.querySelector(".btn-alert");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        // When success
+        // Show loading, move button form
+        btnLoad.classList.toggle("d-none");
+        btnKirim.classList.toggle("d-none");
+
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            // Show button form, move loading
+            btnLoad.classList.toggle("d-none");
+            btnKirim.classList.toggle("d-none");
+            // Show alert
+            Alert.classList.toggle("d-none");
+            // Clear form
+            form.reset();
+
+            console.log("Success!", response);
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>
